@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import frc.robot.commands.AutoCommand;
-class CommandQuery {
+public class Query {
     private ArrayList<AutoCommand> array;
 
     public Query () {
@@ -21,7 +21,7 @@ class CommandQuery {
         if (array.size() == 0) {
             return null;
         }
-        return array.pop(0);
+        return ((Object) array).pop(0);
     }
     public void truncate() {
         array = new ArrayList<AutoCommand>();

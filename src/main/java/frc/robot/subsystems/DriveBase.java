@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.TitanQuad;
+import com.studica.frc.TitanQuadEncoder;
+
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -14,15 +19,8 @@ public class DriveBase extends SubsystemBase {
     private TitanQuadEncoder backEncoder;
 
     private AHRS navx;
-    
-    private ShuffleBoardTab tab = ShuffleBoard.getTab("Training Robot");
 
-    private NetworkTableEntry leftEncoderValue = tab.add("Left Encoder", 0).getEntry();
-    private NetworkTableEntry rightEncoderValue = tab.add("Right Encoder", 0).getEntry();
-    private NetworkTableEntry backEncoderValue = tab.add("Back Encoder", 0).getEntry();
-    private NetworkTableEntry gyroValue = tab.add("Navx Yaw", 0).getEntry();
-
-    public DriveBase {
+    public DriveBase () {
         leftMotor = new TitanQuad(Constants.TITAN_ID, 3);
         rightMotor = new TitanQuad(Constants.TITAN_ID, 0);
         backMotor = new TitanQuad(Constants.TITAN_ID, 1);
@@ -31,7 +29,7 @@ public class DriveBase extends SubsystemBase {
         rightEncoder = new TitanQuadEncoder(rightMotor, 0, Constants.WHEEL_DIST_PER_TICK);
         backEncoder = new TitanQuadEncoder(backMotor, 1, Constants.WHEEL_DIST_PER_TICK);
 
-        navx = new AHRS(SPI.Port.kMXP);   
+        navx = new AHRS(Port.kMXP);   
     }
 
 
@@ -66,7 +64,7 @@ public class DriveBase extends SubsystemBase {
     public void setSpeeds(double left_motor, double right_motor, double back_motor) {
         leftMotor.set(left_motor);
         rightMotor.set(right_motor);
-        back_motor.set(back_motor);
+        backMotor.set(back_motor);
     }
 
     public double getLeftEncoderDist() {
@@ -82,7 +80,7 @@ public class DriveBase extends SubsystemBase {
     }
 
     public double getForvardDist() {
-        return (getLeftEncoderDist() + getRightEncoderDist) / 2;
+        return (getLeftEncoderDist() + getRightEncoderDist()) / 2;
     }
 
     public void resetAll() {
@@ -94,13 +92,5 @@ public class DriveBase extends SubsystemBase {
     }
     public void stop() {
         setSpeeds(0, 0, 0);
-    }
-
-    public void periodic() {
-        backEncoderValue.setDouble(getBackEncoderDist());
-        rightEncoderValue.setDouble(getRightEncoderDist());
-        leftEncoderValue.setDouble(getLeftEncoderDist());
-
-        gyroValue.setDouble(getYaw());
     }
 }
